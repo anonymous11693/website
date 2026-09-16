@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LidarVerse unifies generative and reconstruction-grounded LiDAR sensor simulation in one real-time world model.">
+  <title>Into the LidarVerse | Anonymous Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header" aria-label="Primary navigation">
+    <div class="header-inner">
+      <nav class="site-nav" aria-label="Page sections">
+        <a href="#overview">Overview</a>
+        <a href="#system">System</a>
+        <a href="#demo">Demo</a>
+        <a href="#results">Quantitative Results</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="assets/hero-background.mp4" type="video/mp4">
+      </video>
+      <div class="hero-scrim"></div>
+      <div class="hero-content">
+        <p class="eyebrow">Anonymous Project Page</p>
+        <h1 id="hero-title"><span>Into the LidarVerse</span></h1>
+        <p class="hero-copy">A Real-Time Unified LiDAR World Model Across Tasks and Sensors.</p>
+        <p class="anonymous-note">Anonymous submission</p>
+      </div>
+      <a class="hero-scroll" href="#overview" aria-label="Scroll to overview"></a>
+    </section>
+
+    <section id="overview" class="content-section intro-section">
+      <div class="section-inner narrow">
+        <p class="section-kicker">Overview</p>
+        <h2>From new-world generation to reconstruction-grounded resimulation</h2>
+        <p class="lead">LidarVerse brings generative and reconstruction-based LiDAR simulation into one conditional world model. The inference regime is determined by the available scene evidence, not by a separate architecture or prediction head.</p>
+        <p>Scene-level conditions guide new-world generation; an observed LiDAR prefix turns the same model into a point-cloud forecaster; and sparse observed sweeps form a persistent spatial cache that anchors generalizable resimulation without per-scene optimization. The distilled causal checkpoint runs at 10 FPS on a single accelerator, while the LiDAR tokenizer supports 32-, 64-, and 128-beam sensors.</p>
+      </div>
+    </section>
+
+    <section id="system" class="content-section system-section">
+      <div class="section-inner">
+        <p class="section-kicker">System</p>
+        <h2>One system, from compression to real-time interaction</h2>
+
+        <div class="pipeline" aria-label="Model pipeline">
+          <article>
+            <span class="step-index">01</span>
+            <h3>Universal LiDAR tokenizer</h3>
+            <p>A fully attention-based range-image tokenizer preserves sparse geometry and native temporal resolution in a shared latent space across scanning patterns.</p>
+          </article>
+          <article>
+            <span class="step-index">02</span>
+            <h3>Unified bidirectional teacher</h3>
+            <p>Initialized from a pretrained video diffusion backbone and adapted to LiDAR latents, a flow-matching DiT learns one interface for the LiDAR prefix, HD-Map, spatial cache, and text.</p>
+          </article>
+          <article>
+            <span class="step-index">03</span>
+            <h3>Four-step causal student</h3>
+            <p>Teacher forcing initializes a block-autoregressive student, and self-forcing distribution matching enables four-step generation of each four-frame block.</p>
+          </article>
+          <article>
+            <span class="step-index">04</span>
+            <h3>Temporal and spatial memory</h3>
+            <p>A rolling nine-frame K/V cache retains recent dynamics, while a world-aligned persistent spatial cache preserves confirmed geometry beyond that temporal window.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" class="content-section demo-section" aria-labelledby="demo-title">
+      <div class="section-inner">
+        <div class="interactive-demo-feature">
+          <div class="interactive-demo-heading">
+            <h2 id="demo-title">Interactive Action-Conditioned Generation</h2>
+            <p>Choose a recorded scene and an ego action to generate a LiDAR rollout that responds to the requested action.</p>
+          </div>
+
+          <div class="interactive-mode-tabs" role="group" aria-label="Interactive generation mode">
+            <button type="button" class="interactive-mode-button active" data-interactive-mode="conditional" aria-pressed="true">Full-map conditioning</button>
+            <button type="button" class="interactive-mode-button" data-interactive-mode="world" aria-pressed="false">First-frame conditioning</button>
+          </div>
+          <p class="interactive-mode-caption" id="interactive-demo-conditioning">Full HD-Map and ego action</p>
+
+          <div class="interactive-demo-selectors">
+            <div class="interactive-selector-group">
+              <span>Log</span>
+              <div class="interactive-selector" id="interactive-log-selector" role="group" aria-label="Choose a recorded log"></div>
+            </div>
+            <div class="interactive-selector-group">
+              <span>Action</span>
+              <div class="interactive-selector" id="interactive-action-selector" role="group" aria-label="Choose an ego action"></div>
+            </div>
+          </div>
+
+          <div class="interactive-demo-media">
+            <div class="interactive-demo-video" id="interactive-demo-video-frame">
+              <video id="interactive-demo-video" muted loop playsinline preload="auto"></video>
+              <div class="interactive-demo-labels" aria-hidden="true">
+                <span id="interactive-demo-left-label">Full HD-Map + ego action</span>
+                <span class="ours" id="interactive-demo-right-label">Generated LiDAR</span>
+              </div>
+              <span class="interactive-demo-loading" id="interactive-demo-loading" role="status" aria-live="polite">Loading video…</span>
+            </div>
+            <div class="interactive-demo-player">
+              <button type="button" id="interactive-demo-play" aria-label="Pause video">Ⅱ</button>
+              <span id="interactive-demo-time">0:00 / 0:00</span>
+              <input id="interactive-demo-seek" type="range" min="0" max="100" step="0.01" value="0" aria-label="Video progress">
+              <button type="button" class="interactive-demo-fullscreen" id="interactive-demo-fullscreen" aria-label="View video fullscreen">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="capability-demo-heading">
+          <h3>One causal checkpoint, three LiDAR simulation regimes</h3>
+          <p>Changing only the available scene evidence moves the same real-time model from generation to forecasting to reconstruction-grounded resimulation.</p>
+        </div>
+
+        <div class="capability-tabs" role="tablist" aria-label="LiDAR world model capabilities">
+          <button class="capability-button active" role="tab" aria-selected="true" aria-controls="capability-panel" id="capability-tab-generation" data-capability="generation">
+            Generation
+          </button>
+          <button class="capability-button" role="tab" aria-selected="false" aria-controls="capability-panel" id="capability-tab-forecasting" data-capability="forecasting">
+            Forecasting
+          </button>
+          <button class="capability-button" role="tab" aria-selected="false" aria-controls="capability-panel" id="capability-tab-resimulation" data-capability="resimulation">
+            Resimulation
+          </button>
+        </div>
+
+        <section class="capability-panel" id="capability-panel" role="tabpanel" aria-labelledby="capability-tab-generation">
+          <p class="capability-context" id="capability-context">With no observed scene geometry, scene-level conditions guide new-world generation while a rolling spatial cache is built from generated sweeps.</p>
+          <div class="capability-diagram" id="capability-diagram" aria-live="polite">
+            <div class="capability-submodes" id="capability-submodes" role="group" aria-label="Generation capability"></div>
+          </div>
+
+          <div class="capability-media" id="capability-media">
+            <canvas id="capability-media-canvas" aria-hidden="true"></canvas>
+            <div class="capability-video-grid" id="capability-video-grid" aria-label="Four-panel video comparison" hidden>
+              <video id="capability-video" muted loop playsinline preload="auto"></video>
+              <div class="capability-video-labels" id="capability-video-labels" aria-hidden="true"></div>
+              <div class="capability-video-phase" id="capability-video-phase" aria-label="Forecast phase" hidden>
+                <span data-video-phase="input">Input · 3s</span>
+                <span data-video-phase="prediction">Forecast · 3s</span>
+              </div>
+              <span class="capability-video-loading" id="capability-video-loading" role="status" aria-live="polite">Loading video…</span>
+            </div>
+            <div class="capability-media-scrim" aria-hidden="true"></div>
+            <div class="capability-media-selector" id="capability-media-selector" aria-label="Choose a result example" hidden></div>
+            <div class="capability-media-copy">
+              <span id="capability-media-index">01 / 03</span>
+              <div>
+                <strong id="capability-media-title">Controllable generation</strong>
+                <small id="capability-media-description">Generate temporally consistent LiDAR from HD-Map and actor-layout conditions.</small>
+              </div>
+            </div>
+          </div>
+          <div class="capability-video-controls" id="capability-video-controls" hidden>
+            <button type="button" id="capability-video-play" aria-label="Pause video">Ⅱ</button>
+            <span id="capability-video-time">0:00 / 0:00</span>
+            <input id="capability-video-seek" type="range" min="0" max="100" step="0.01" value="0" aria-label="Video progress">
+            <div class="capability-video-speed" role="group" aria-label="Playback speed">
+              <button type="button" data-speed="0.5" aria-pressed="false">0.5×</button>
+              <button type="button" class="active" data-speed="1" aria-pressed="true">1×</button>
+              <button type="button" data-speed="2" aria-pressed="false">2×</button>
+            </div>
+            <button type="button" class="capability-video-fullscreen" id="capability-video-fullscreen" aria-label="View video fullscreen">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"></path>
+              </svg>
+            </button>
+          </div>
+          <p class="capability-media-footnote" id="capability-media-footnote" hidden></p>
+        </section>
+
+        <div class="cross-sensor-demo" aria-labelledby="cross-sensor-demo-title">
+          <div class="cross-sensor-demo-heading">
+            <p class="section-kicker">Across Sensors and Datasets</p>
+            <h3 id="cross-sensor-demo-title">One HD-Map, three LiDAR configurations</h3>
+            <p>After joint adaptation, one model generates the distinct scanning patterns of 32-beam nuScenes, 64-beam Waymo, and an anonymized 128-beam dataset from the same Waymo HD-Map.</p>
+          </div>
+
+          <div class="cross-sensor-media" id="cross-sensor-media">
+            <video id="cross-sensor-video" autoplay muted loop playsinline preload="auto" aria-label="Cross-dataset LiDAR generation comparison">
+              <source src="assets/cross-sensor/cross-dataset-generation.mp4" type="video/mp4">
+            </video>
+            <div class="capability-video-labels" aria-hidden="true">
+              <span class="capability-video-label">Input HD-Map</span>
+              <span class="capability-video-label">nuScenes <strong>32 beams</strong></span>
+              <span class="capability-video-label">Waymo <strong>64 beams</strong></span>
+              <span class="capability-video-label">Anonymous dataset <strong>128 beams</strong></span>
+            </div>
+          </div>
+          <div class="capability-video-controls cross-sensor-video-controls">
+            <button type="button" id="cross-sensor-video-play" aria-label="Pause video">Ⅱ</button>
+            <span id="cross-sensor-video-time">0:00 / 0:00</span>
+            <input id="cross-sensor-video-seek" type="range" min="0" max="100" step="0.01" value="0" aria-label="Cross-dataset video progress">
+            <div class="capability-video-speed" role="group" aria-label="Cross-dataset playback speed">
+              <button type="button" data-cross-sensor-speed="0.5" aria-pressed="false">0.5×</button>
+              <button type="button" class="active" data-cross-sensor-speed="1" aria-pressed="true">1×</button>
+              <button type="button" data-cross-sensor-speed="2" aria-pressed="false">2×</button>
+            </div>
+            <button type="button" class="capability-video-fullscreen" id="cross-sensor-video-fullscreen" aria-label="View cross-dataset video fullscreen">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="content-section results-section">
+      <div class="section-inner">
+        <p class="section-kicker">Quantitative Results</p>
+        <h2>Quantitative evaluation across LiDAR simulation regimes</h2>
+        <p class="section-summary">We evaluate the shared tokenizer, then the same causal checkpoint across autoregressive generation, point-cloud forecasting, and generalizable resimulation.</p>
+
+        <div class="result-view-toggle" role="group" aria-label="Results view">
+          <button type="button" class="active" data-results-view="plots" aria-pressed="true">Interactive</button>
+          <button type="button" data-results-view="tables" aria-pressed="false">Full table</button>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Result tasks">
+          <button class="tab-button active" role="tab" aria-selected="true" aria-controls="panel-tokenizer" id="tab-tokenizer" data-tab="tokenizer">Tokenizer</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-generation" id="tab-generation" data-tab="generation">Generation</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-forecasting" id="tab-forecasting" data-tab="forecasting">Forecasting</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-resimulation" id="tab-resimulation" data-tab="resimulation">Resimulation</button>
+        </div>
+
+        <div class="tab-panels" id="results-table-view" hidden>
+          <section class="tab-panel active" role="tabpanel" id="panel-tokenizer" aria-labelledby="tab-tokenizer">
+            <div class="result-heading">
+              <div><h3>LiDAR video tokenizer comparison</h3></div>
+              <p>MMD ×10⁵ · ↓ lower is better</p>
+            </div>
+            <div class="table-shell" id="vae-comparison-table"></div>
+
+            <div class="result-heading secondary-heading">
+              <div><h3>Tokenizer architecture ablation</h3></div>
+            </div>
+            <div class="table-shell" id="vae-ablation-table"></div>
+          </section>
+
+          <section class="tab-panel" role="tabpanel" id="panel-generation" aria-labelledby="tab-generation" hidden>
+            <div class="result-heading">
+              <div><h3>Autoregressive LiDAR generation</h3></div>
+              <p>HD-Map-conditioned and interactive action-conditioned generation · MMD ×10⁵</p>
+            </div>
+            <div class="table-shell" id="generation-table"></div>
+          </section>
+
+          <section class="tab-panel" role="tabpanel" id="panel-forecasting" aria-labelledby="tab-forecasting" hidden>
+            <div class="result-heading">
+              <div><h3>Conditional point-cloud forecasting</h3></div>
+              <p>30 observed frames at 10 Hz → 30 future frames at 10 Hz</p>
+            </div>
+            <div class="table-shell" id="forecasting-table"></div>
+          </section>
+
+          <section class="tab-panel" role="tabpanel" id="panel-resimulation" aria-labelledby="tab-resimulation" hidden>
+            <div class="result-heading">
+              <div><h3>Generalizable LiDAR resimulation</h3></div>
+              <p>Novel-view interpolation and extrapolation without per-scene optimization</p>
+            </div>
+            <div class="table-shell" id="resimulation-table"></div>
+          </section>
+
+        </div>
+
+        <section class="metric-explorer" id="results-plot-view" aria-labelledby="metric-explorer-title">
+          <div class="metric-explorer-heading">
+            <div>
+              <p class="metric-explorer-kicker" id="metric-explorer-context">Tokenizer</p>
+              <h3 id="metric-explorer-title">Representative metric comparison</h3>
+              <p id="metric-explorer-detail"></p>
+            </div>
+          </div>
+          <div class="metric-plot-grid" id="metric-plot-grid" aria-live="polite"></div>
+          <p class="metric-explorer-note">Each plot uses its own zero-based y-axis. Hover or focus a mark to inspect its values.</p>
+        </section>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Anonymous Project Page · LidarVerse</p>
+    <a href="#top" aria-label="Back to top">↑</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
